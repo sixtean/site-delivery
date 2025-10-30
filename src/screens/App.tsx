@@ -7,7 +7,7 @@ import Home from './Home.tsx';
 function App() {
   return (
     <Router>
-      <div className='min-h-screen bg-gray-900 text-white'>
+      <div className='min-h-screen bg-white text-white dark:bg-black'>
         <Routes>
           <Route path='/' element={<Login />} />
           <Route path='/home' element={<Home />} />

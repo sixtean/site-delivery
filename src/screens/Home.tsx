@@ -1,8 +1,13 @@
-
+import useTitle from "../hooks/title";
+import Menu from "../utils/menu";
+import ThemeToggle from "../utils/togleTheme";
 
 function Home() {
     return (
-        <h1>Home Screen</h1>
+        <>
+            <Menu />
+            <ThemeToggle />
+        </>
     )
 }
 

@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './styles/index.css'
+import './index.css'
 import App from './screens/App.tsx'
 import "bootstrap-icons/font/bootstrap-icons.css";
 
