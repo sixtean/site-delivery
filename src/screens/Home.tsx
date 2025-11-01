@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import useTitle from "../hooks/title";
-import Menu from "../utils/menu";
-import ThemeToggle from "../utils/togleTheme";
-import { getCompanyInfo } from "../services/company.service";
-import { Copy } from "lucide-react";
+import { Copy, Check, AlertTriangle, Printer, BellOff, XCircle } from "lucide-react";
 
 import type { Company } from "../DTOs/Company";
+import ThemeToggle from "../utils/togleTheme";
+import { getCompanyInfo } from "../services/company.service";
+
+import useTitle from "../hooks/title";
+import Menu from "../utils/menu";
 
 function Home() {
+    const [copied, setCopied] = useState(false);
     const [company, setCompany] = useState<Company>({
         id: 0,
         name: "",
@@ -17,8 +19,15 @@ function Home() {
         updated_at: "",
     });
 
-    useTitle(company.name, "Home");
+    const [alerts, setAlerts] = useState([
+        { id: 1, type: 'Delay', message: 'Pedido 143 atrasado há 14 min' },
+        { id: 2, type: 'Printer', message: 'Impressora desconectada' },
+        { id: 3, type: 'Offiline', message: 'Entregador Lucass está desconectado há 20 min' },
+        { id: 4, type: 'stock', message: 'Estoque baixo em "Batata palha"' },
+    ])
 
+    useTitle(company.name, "Home");
+    
     useEffect(() => {
         async function fetchCompany() {
             try {
@@ -35,7 +44,8 @@ function Home() {
 
     const copyToClipboard = async () => {
         await navigator.clipboard.writeText(companyLink);
-        alert("Link copiado para a área de transferência!");
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000)
     };
     
     return (
@@ -45,35 +55,68 @@ function Home() {
                     <>
                         <header
                             className="absolute top-10 left-28 px-6 py-4 
-                                        border border-red-400/30 rounded-xl 
-                                        bg-gradient-to-r from-red-500/90 to-red-600/90 
+                                        border border-gray-300 rounded-xl 
+                                        bg-gray-100/90 text-gray-800 
                                         shadow-[0_4px_20px_rgba(0,0,0,0.15)] 
-                                        backdrop-blur-sm text-white
+                                        backdrop-blur-sm
                                         font-semibold tracking-wide 
                                         flex flex-col gap-2 w-[340px]"
                             > 
-                            <h1 className="text-lg drop-shadow-sm">
+                            <h1 className="text-lg drop-shadow-sm text-gray-900">
                                 {company.name}
                             </h1>
-                            <div className="flex items-center gap-2 bg-white/10 p-2 rounded-md text-sm">
+                            <div className="flex items-center gap-2 bg-white p-2 rounded-md text-sm border border-gray-300">
                                 <input
                                     type="text"
                                     readOnly
-                                    value={companyLink}
-                                    className="bg-transparent text-white w-full outline-none"
-                                />
-                                <button
-                                    onClick={copyToClipboard}
-                                    className="p-1 hover:bg-white/20 rounded transition"
-                                    title="Copiar link"
-                                >
-                                    <Copy size={16} />
-                                </button>
+                                    value={
+                                        copied
+                                            ? "Link copiado!"
+                                            : "Envie este link para os clientes fazerem pedidos"
+                                    }
+                                    onFocus={(e) => e.target.select()}
+                                    className={`bg-transparent w-full outline-none select-none cursor-default transition-colors duraction-300 ${
+                                        copied ? "text-green-600" : "text-gray-700"
+                                    }`}
+                                />    
+                                {copied ? (                        
+                                    <button
+                                        className="p-1 bg-green-100 text-green-700 rounded transition-all duraction-300"
+                                        title="Copiado!"
+                                    >
+                                        <Check size={16} />
+                                    </button>
+                                ) : (
+                                    <button
+                                        onClick={copyToClipboard}
+                                        className="p-1 hover:bg-gray-100 rounded transition-all duraction-300"
+                                        title="Copiar link"
+                                    >
+                                        <Copy size={16} />
+                                    </button>
+                                )}
                             </div>
-                            <p className="text-x5 text-white/80">
-                                Compartilhe este link para que seus clientes possam fazer pedidos!
-                            </p>
                         </header>
+                        <section className="mt-6 w-[340px] bg-white border border-red-200 rounded-xl shadow-sm p-4">
+                            <h2 className="text-gray-800 font-bold text-md mb-2">
+                                Alertas e prioridades
+                            </h2>
+                            <ul className="flex flex-col gap-2 text-sm text-gray-700">
+                                {alerts.map((alert) => (
+                                    <li
+                                        key={alert.id}
+                                        className="flex items-center gap-2 bg-yellow-50 border border-yellow-100 p-2 rounded-md hover:bg-yellow-100 transition"
+                                        >
+                                        {alert.type === "delay" && <AlertTriangle className="text-yellow-600" size={16} />}
+                                        {alert.type === "printer" && <Printer className="text-red-600" size={16} />}
+                                        {alert.type === "offline" && <BellOff className="text-gray-600" size={16} />}
+                                        {alert.type === "stock" && <XCircle className="text-red-700" size={16} />}
+                                        <span>{alert.message}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </section>
+
                         <Menu />
                         <ThemeToggle />
                     </>
