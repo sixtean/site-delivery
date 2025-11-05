@@ -78,11 +78,14 @@ function Home() {
 
   return (
     <>
-        <main className="min-h-screen flex md:flex-row gap-6 p-4 md:p-8 relative overflow-hidden">
+        <main className="min-h-screen flex md:flex-row gap-6 p-4 md:p-8 overflow-hidden">
             {company ? (
                 <>
                     <Menu />
-                    <div className="flex flex-col w-full gap-6">
+                    <div className="flex flex-col w-full
+                        h-[50vh] sm:h-[45vh] md:h-[50vh] lg:h-[55vh] xl:h-[55vh]
+                        gap-6"
+                    >
                         <div className="flex">
                             <div className="flex flex-col gap-6 w-full md:w-[420px] z-20 relative">
                                 <header

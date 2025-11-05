@@ -30,9 +30,7 @@ function Login() {
                 duration: 4000,
             });
 
-            if(result?.success) {
-               
-                  
+            if(result?.success) {   
                 setTimeout(() => {
                     navigate("/home");
                 }, 4500);
